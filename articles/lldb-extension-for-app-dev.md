@@ -6,6 +6,7 @@ topics: ["iOS", "LLDB"]
 published: true
 ---
 
+# 目次
 - [LLDBとは](#lldbとは)
 - [LLDBで使用可能なコマンド](#lldbで使用可能なコマンド)
 - [LLDBのカスタムコマンド](#lldbのカスタムコマンド)
@@ -26,7 +27,7 @@ published: true
 - [終わりに](#終わりに)
 
 
-## LLDBとは
+# LLDBとは
 LLDBは、Xcodeに付属されているデバッグツールの一部です。
 アプリケーションのデバッグや解析に役立つツールです。
 特に、バグの原因を突き止める場合には大いに役立ちます。
@@ -45,7 +46,7 @@ LLDBでは例えば、以下のようなことを行うことが可能です。
 - ...
 
 
-## LLDBで使用可能なコマンド
+# LLDBで使用可能なコマンド
 Xcodeでは、UIによってブレークポイントを設定したり、ステップ実行を行ったりすることができるようになっています。
 が、もちろんコマンドからも操作可能です。
 
@@ -80,11 +81,11 @@ Xcodeでは、UIによってブレークポイントを設定したり、ステ�
 
 
 
-##　LLDBのカスタムコマンド
+#　LLDBのカスタムコマンド
 LLDBでは、ユーザが新たに定義したカスタムコマンドを追加することができるようになっています。
 ここでは、例としていくつか簡単なカスタムコマンドを定義してみましょう。
 
-### 例１: オブジェクトのプロパティ情報を表示するコマンド
+## 例１: オブジェクトのプロパティ情報を表示するコマンド
 SwiftではリフレクションのためにMirrorという構造体が用意されています。
 以下のようなコードで、オブジェクトのプロパティ情報を取得することができます。
 
@@ -150,7 +151,7 @@ command alias mr mirror
 ```
 
 
-### 例2： 実行中のアプリのBundleパスをFinderで開く（Simulator限定）
+## 例2： 実行中のアプリのBundleパスをFinderで開く（Simulator限定）
 例１では比較的簡単な処理のカスタムコマンドの実装を行いました。
 でも、もっと高度な処理を行うコマンドを実装してみたい場合はどうでしょうか。
 LLDBには、Pythonを利用したカスタムコマンドの実装方法についても用意されています。
@@ -161,7 +162,7 @@ LLDBには、Pythonを利用したカスタムコマンドの実装方法につ�
 openbundle
 ```
 
-#### 準備
+### 準備
 まず実装の前に準備が必要です。
 コマンドの実装では、pythonの「lldb」モジュールを使用するのですが、このままではimportできません。
 shellで以下のコマンドを実行して、モジュールの場所を探します。
@@ -182,16 +183,16 @@ lldb -P
 PYTHONPATH=/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Resources/Python
 ```
 
-####　実装
+###　実装
 
-##### 1. import
+#### 1. import
 まずは、lldbをインポート。
 ここでエラーが出る場合は、PYTHONPATHの設定がうまくできていないので、もう一度見直しましょう。
 ```python
 import lldb
 ```
 
-##### 2. 関数の定義
+#### 2. 関数の定義
 以下のように五つの引数を受け取る関数を定義しておきます。
 `@lldb.command`というデコレータを付加しておくと、このpythonファイルのimport時に自動でコマンド登録が行われるようになります。
 ```python
@@ -205,7 +206,7 @@ def handle_command(
     pass
 ```
 
-##### 3. Bundleパスの取得
+#### 3. Bundleパスの取得
 Swiftでは以下のようなコードでBundleパスが取得できますね。
 ```swift
 Bundle.main.bundlePath
@@ -233,7 +234,7 @@ value: lldb.SBValue = frame.EvaluateExpression(script)
 path = value.GetObjectDescription()
 ```
 
-##### 4. FinderでBundleパスを開く
+#### 4. FinderでBundleパスを開く
 shellでは以下のフォーマットで、パスをFinderで開くことが可能です。
 ```sh
 open -R <パス>
@@ -247,13 +248,13 @@ shell = f"open -R {path}"
 subprocess.run(shell, shell=True)
 ```
 
-##### 5. LLDBにカスタムコマンドを読み込み
+#### 5. LLDBにカスタムコマンドを読み込み
 LLDBで以下のコマンドを実行すると読み込めます。
 ```sh
 command script import <実装したPythonファイルまでのパス>
 ```
 
-##### 実装したPythonによるカスタムコマンドの全貌
+#### 実装したPythonによるカスタムコマンドの全貌
 改善点はたくさんありますが、こんな感じです。
 
 ```python
@@ -285,13 +286,13 @@ def handle_command(
     subprocess.run(shell, shell=True)
 ```
 
-## アプリ開発のためのLLDBカスタムコマンド
+# アプリ開発のためのLLDBカスタムコマンド
 アプリ開発をより快適にするためのLLDBのカスタムコマンドの機能を色々考えてみました。
 実装したものがこちらです。
 
 https://github.com/p-x9/iLLDB
 
-### UIの階層を表示する機能
+## UIの階層を表示する機能
 `ui tree`でアプリのUIの階層構造を表示します。
 
 ![KeyWindow](https://github.com/p-x9/iLLDB/raw/main/resources/keyWindow-simple.png)
@@ -317,7 +318,7 @@ ui tree --layer {layerのアドレス(0x600000c7e0a0)}
 実装は[ここ](https://github.com/p-x9/iLLDB/blob/main/src/ui.py)にあります。
 https://github.com/p-x9/iLLDB/blob/main/src/ui.py
 
-### ファイルの階層を表示する
+## ファイルの階層を表示する
 `file tree`でアプリのファイル構造を表示します。
 
 ![FileTree](https://github.com/p-x9/iLLDB/raw/main/resources/file-tree.png)
@@ -330,10 +331,10 @@ file tree --documents
 file tree {path}
 ```
 
-実装は[ここ](https://github.com/p-x9/iLLDB/blob/main/src/file.py)にあります。
-https://github.com/p-x9/iLLDB/blob/main/src/file.py
+実装は[ここ](https://github.com/p-x9/iLLDB/blob/78081cc356cc5df44035b34dead5b3e80e38b930/src/file.py#L64-L88)にあります。
+https://github.com/p-x9/iLLDB/blob/78081cc356cc5df44035b34dead5b3e80e38b930/src/file.py#L64-L88
 
-###　　シミュレータで実行中のアプリのパスをFinderで開く
+##　　シミュレータで実行中のアプリのパスをFinderで開く
 `file open`でアプリに関するディレクトリをFinderで開きます。
 以下のように実行します。
 ```sh
@@ -343,13 +344,13 @@ file open --documents
 file open {path}
 ```
 
-実装は[ここ](https://github.com/p-x9/iLLDB/blob/main/src/file.py)にあります。
-https://github.com/p-x9/iLLDB/blob/main/src/file.py
+実装は[ここ](https://github.com/p-x9/iLLDB/blob/78081cc356cc5df44035b34dead5b3e80e38b930/src/file.py#L91-L116)にあります。
+https://github.com/p-x9/iLLDB/blob/78081cc356cc5df44035b34dead5b3e80e38b930/src/file.py#L91-L116
 
-### その他
+## その他
 他にもUserDefaultsの簡易操作、アプリやデバイス情報の表示、HTTP Cookieの簡易操作などさまざまな機能を実装しています。
 
-## 終わりに
+# 終わりに
 今回はLLDBのカスタムコマンドの実装について書きました。
 何かいい機能のアイデアあれば[Issue](https://github.com/p-x9/iLLDB/issues)や[プルリク](https://github.com/p-x9/iLLDB/pulls)ください。
 
