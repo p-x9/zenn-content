@@ -1,5 +1,5 @@
 ---
-title: "LLDBのカスタムコマンドを実装してアプリ開発を便利にする"
+title: "LLDBのカスタムコマンドを実装してアプリ開発を快適に"
 emoji: "🛠️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["iOS", "LLDB"]
