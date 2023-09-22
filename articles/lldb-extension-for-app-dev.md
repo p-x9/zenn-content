@@ -3,7 +3,7 @@ title: "LLDBのカスタムコマンドを実装してアプリ開発を便利�
 emoji: "🛠️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["iOS", "LLDB"]
-published: false
+published: true
 ---
 
 - [LLDBとは](#lldbとは)
